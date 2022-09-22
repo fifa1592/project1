@@ -5,6 +5,17 @@ var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
+var mysql = require('mysql2');
+var db = mysql.createConnection({
+  host: '172.17.0.3',
+  user: 'root',
+  password: 'sugar1492!!',
+  database: 'test'
+});
+
+db.connect();
+
+
 
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -12,7 +23,7 @@ var app = http.createServer(function(request,response){
     var pathname = url.parse(_url, true).pathname;
     if(pathname === '/'){
       if(queryData.id === undefined){
-        fs.readdir('./data', function(error, filelist){
+        /* fs.readdir('./data', function(error, filelist){
           var title = 'Welcome';
           var description = 'Hello, Node.js';
           var list = template.list(filelist);
@@ -22,6 +33,11 @@ var app = http.createServer(function(request,response){
           );
           response.writeHead(200);
           response.end(html);
+        }); */
+        db.query(`SELECT * FROM topic`, function(error, topics){
+          console.log(topics);
+          response.writeHead(200);
+          response.end('success');
         });
       } else {
         fs.readdir('./data', function(error, filelist){
